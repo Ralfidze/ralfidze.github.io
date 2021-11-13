@@ -10,7 +10,7 @@ default_language = "en"
 
 # The site theme to use.
 theme = "DeepThought"
-avatar = "/docs/images/avatar.png"
+# avatar = "/images/avatar.png"
 
 # For overriding the default output directory `public`, set it to another value (e.g.: "docs")
 # output_dir = "docs"
