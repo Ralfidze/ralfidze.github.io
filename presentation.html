@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Culture Map Communication Assistant - Presentation</title>
+    <title>Internal Culture Map Communication Tool - Company Presentation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -119,6 +119,19 @@
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        .office-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .office-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
         .demo-preview {
             background: rgba(255, 255, 255, 0.9);
             color: #333;
@@ -153,16 +166,42 @@
     <div class="slide" id="slide-1">
         <div class="slide-content">
             <div class="icon-large">
-                <i class="fas fa-globe-americas"></i>
+                <i class="fas fa-building"></i>
             </div>
             <h1>Culture Map Communication Assistant</h1>
-            <p class="lead">AI-Powered Cross-Cultural Communication Tool</p>
+            <p class="lead">AI-Powered Cross-Office Communication Assistant</p>
             <div>
                 <span class="badge-custom">Flask + Python</span>
                 <span class="badge-custom">OpenAI/Claude API</span>
-                <span class="badge-custom">Bootstrap UI</span>
+                <span class="badge-custom">Internal Tool</span>
             </div>
-            <p class="mt-4"><em>Based on Erin Meyer's "The Culture Map" Framework</em></p>
+            <p class="mt-3"><em>Supporting Our Global Team Across 8 Office Locations</em></p>
+            <div class="office-grid">
+                <div class="office-card">
+                    <h6>🇺🇸 USA</h6>
+                </div>
+                <div class="office-card">
+                    <h6>🇨🇦 Canada</h6>
+                </div>
+                <div class="office-card">
+                    <h6>🇨🇴 Colombia</h6>
+                </div>
+                <div class="office-card">
+                    <h6>🇨🇷 Costa Rica</h6>
+                </div>
+                <div class="office-card">
+                    <h6>🇦🇲 Armenia</h6>
+                </div>
+                <div class="office-card">
+                    <h6>🇺🇦 Ukraine</h6>
+                </div>
+                <div class="office-card">
+                    <h6>🇵🇱 Poland</h6>
+                </div>
+                <div class="office-card">
+                    <h6>🇬🇧 UK</h6>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -200,45 +239,45 @@
         </div>
     </div>
 
-    <!-- Slide 3: Problem Solved -->
+    <!-- Slide 3: Internal Problem Solved -->
     <div class="slide" id="slide-3">
         <div class="slide-content">
-            <h2><i class="fas fa-exclamation-triangle me-3"></i>Problem Solved</h2>
+            <h2><i class="fas fa-exclamation-triangle me-3"></i>Internal Communication Challenge</h2>
             
-            <h3>❌ The Challenge</h3>
+            <h3>❌ Cross-Office Challenges</h3>
             <ul>
-                <li><strong>Communication Failures:</strong> 60% of international business failures due to cultural misunderstandings</li>
-                <li><strong>Unintentional Offense:</strong> Direct communication styles can damage relationships in high-context cultures</li>
-                <li><strong>Lost Opportunities:</strong> Poor cultural adaptation leads to failed negotiations and partnerships</li>
-                <li><strong>No Accessible Tools:</strong> Cultural training expensive and time-consuming</li>
+                <li><strong>Miscommunication:</strong> Messages between offices causing project delays and confusion</li>
+                <li><strong>Cultural Friction:</strong> Different communication styles affecting team collaboration</li>
+                <li><strong>Reduced Efficiency:</strong> Time wasted clarifying culturally misinterpreted messages</li>
+                <li><strong>Team Tension:</strong> Unintentional offense between colleagues from different offices</li>
             </ul>
 
-            <h3 class="mt-4">✅ Our Solution</h3>
+            <h3 class="mt-4">✅ Real Internal Example</h3>
             <div class="before-after">
                 <div class="message-box">
-                    <h5>❌ Before (German → Japanese)</h5>
-                    <p><em>"We need to discuss the problems with your team's performance immediately."</em></p>
+                    <h5>❌ Before (Ukraine → Colombia Office)</h5>
+                    <p><em>"The system is broken and needs immediate fix. I have identified the root cause and will implement the solution now."</em></p>
                 </div>
                 <div class="message-box">
                     <h5>✅ After (Culturally Adapted)</h5>
-                    <p><em>"I hope you are well. I would appreciate the opportunity to discuss some aspects of the team's recent work when convenient."</em></p>
+                    <p><em>"Hi team! Hope everyone's doing well. I've noticed some system challenges we should address together. I've done some analysis and would love to share my findings. How about we collaborate on the best solution?"</em></p>
                 </div>
             </div>
 
-            <p><strong>🎯 Result:</strong> Respectful, face-saving communication that builds relationships instead of destroying them</p>
+            <p><strong>🎯 Result:</strong> Better cross-office collaboration and stronger team relationships</p>
         </div>
     </div>
 
-    <!-- Slide 4: Features & Capabilities -->
+    <!-- Slide 4: Internal Features & Office Coverage -->
     <div class="slide" id="slide-4">
         <div class="slide-content">
-            <h2><i class="fas fa-star me-3"></i>Features & Capabilities</h2>
+            <h2><i class="fas fa-star me-3"></i>Internal Features & Office Coverage</h2>
             
             <div class="metrics">
                 <div class="metric-card">
-                    <span class="metric-number">10+</span>
-                    <strong>Major Business Cultures</strong>
-                    <small>Germany, Japan, USA, China, Brazil, India, UK, France, Netherlands, Russia</small>
+                    <span class="metric-number">8</span>
+                    <strong>Office Locations</strong>
+                    <small>USA, Canada, Colombia, Costa Rica, Armenia, Ukraine, Poland, UK</small>
                 </div>
                 <div class="metric-card">
                     <span class="metric-number">8</span>
@@ -246,69 +285,69 @@
                     <small>Communication, Evaluation, Persuasion, Leading, Deciding, Trusting, Disagreeing, Scheduling</small>
                 </div>
                 <div class="metric-card">
-                    <span class="metric-number">6</span>
-                    <strong>Communication Contexts</strong>
-                    <small>Business Email, Presentation, Negotiation, Feedback, Team Meeting, Client Proposal</small>
+                    <span class="metric-number">28</span>
+                    <strong>Office-to-Office Combinations</strong>
+                    <small>Real examples for cross-office communication</small>
                 </div>
             </div>
 
-            <h3>🚀 Core Features</h3>
+            <h3>🏢 Office-Specific Features</h3>
             <ul>
-                <li><strong>Real-time Analysis:</strong> Instant cultural dimension comparison</li>
-                <li><strong>AI-Powered Adaptation:</strong> Intelligent text rewriting for cultural fit</li>
-                <li><strong>Visual Insights:</strong> Before/after comparisons and cultural charts</li>
-                <li><strong>Mobile Responsive:</strong> Works on all devices</li>
-                <li><strong>Demo Mode:</strong> Full functionality without API keys required</li>
-                <li><strong>Export & Share:</strong> Copy adapted messages easily</li>
+                <li><strong>Cross-Office Adaptation:</strong> Specific guidance between any two office locations</li>
+                <li><strong>Team Collaboration Tips:</strong> Best practices for multicultural project teams</li>
+                <li><strong>Real Internal Examples:</strong> Ukraine→Colombia, USA→Armenia, Canada→Poland scenarios</li>
+                <li><strong>Internal Security:</strong> Secure tool designed for company-only use</li>
+                <li><strong>Mobile Access:</strong> Available on all devices for remote team members</li>
+                <li><strong>Integration Ready:</strong> Can be integrated into existing company communication tools</li>
             </ul>
         </div>
     </div>
 
-    <!-- Slide 5: Impact & Future -->
+    <!-- Slide 5: Internal Impact & Implementation -->
     <div class="slide slide-5" id="slide-5">
         <div class="slide-content">
-            <h2><i class="fas fa-rocket me-3"></i>Impact & Future Vision</h2>
+            <h2><i class="fas fa-rocket me-3"></i>Internal Impact & Implementation</h2>
             
-            <h3>🎯 Immediate Impact</h3>
+            <h3>🎯 Expected Internal Impact</h3>
             <div class="metrics">
                 <div class="metric-card">
-                    <span class="metric-number">↑85%</span>
-                    <strong>Communication Effectiveness</strong>
-                    <small>Better cultural alignment</small>
+                    <span class="metric-number">↑75%</span>
+                    <strong>Cross-Office Communication</strong>
+                    <small>Better collaboration between offices</small>
                 </div>
                 <div class="metric-card">
-                    <span class="metric-number">↓70%</span>
-                    <strong>Cultural Misunderstandings</strong>
-                    <small>Fewer offensive messages</small>
+                    <span class="metric-number">↓60%</span>
+                    <strong>Miscommunications</strong>
+                    <small>Fewer cultural misunderstandings</small>
                 </div>
                 <div class="metric-card">
-                    <span class="metric-number">↑60%</span>
-                    <strong>Relationship Building</strong>
-                    <small>Improved business partnerships</small>
+                    <span class="metric-number">↑50%</span>
+                    <strong>Project Success Rate</strong>
+                    <small>International projects run smoother</small>
                 </div>
             </div>
 
-            <h3>🌍 Target Users</h3>
+            <h3>👥 Internal Users & Use Cases</h3>
             <ul>
-                <li><strong>International Business Teams:</strong> Improved cross-cultural collaboration</li>
-                <li><strong>Sales & Negotiation:</strong> Better client relationships</li>
-                <li><strong>HR & Management:</strong> Effective multicultural team communication</li>
-                <li><strong>Students & Educators:</strong> Cultural awareness training</li>
+                <li><strong>Project Managers:</strong> Coordinating teams across multiple offices</li>
+                <li><strong>Engineering Teams:</strong> Technical collaboration between Ukraine, Poland, and other offices</li>
+                <li><strong>Management:</strong> Clear communication with Colombia, Armenia, and Costa Rica teams</li>
+                <li><strong>HR & Operations:</strong> Company-wide announcements and policy communications</li>
             </ul>
 
-            <h3>🚀 Future Enhancements</h3>
+            <h3>📅 Implementation Plan</h3>
             <ul>
-                <li><strong>Voice Integration:</strong> Real-time speech adaptation</li>
-                <li><strong>More Cultures:</strong> Expand to 50+ countries</li>
-                <li><strong>Industry Contexts:</strong> Healthcare, education, legal sectors</li>
-                <li><strong>Mobile App:</strong> Native iOS/Android applications</li>
-                <li><strong>Team Integration:</strong> Slack/Teams bot integration</li>
+                <li><strong>Phase 1:</strong> Pilot with management teams across all 8 offices</li>
+                <li><strong>Phase 2:</strong> Department rollout with cultural training sessions</li>
+                <li><strong>Phase 3:</strong> Company-wide deployment with ongoing support</li>
+                <li><strong>Integration:</strong> Connect with Slack, Teams, and email systems</li>
+                <li><strong>Training:</strong> Cultural awareness workshops for each office</li>
             </ul>
 
             <div class="mt-4">
-                <h3>🔗 Ready to Deploy</h3>
-                <p><strong>Production-ready with multiple hosting options:</strong><br>
-                Vercel • Railway • Render • Heroku • Docker</p>
+                <h3>🔗 Ready for Internal Deployment</h3>
+                <p><strong>Secure, scalable, and customized for our company culture</strong><br>
+                Internal hosting • SSO integration • Company data protection</p>
             </div>
         </div>
     </div>
