@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culture Map Communication Assistant - Interactive Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --success-color: #198754;
+            --border-radius: 0.5rem;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f6fa; }
+        .card { border: none; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); border-radius: var(--border-radius); }
+        .adapted-message { background-color: #f8f9fa; border-left: 4px solid var(--success-color); padding: 1.5rem; border-radius: var(--border-radius); font-size: 1.05rem; line-height: 1.7; white-space: pre-wrap; }
+        .comparison-box { padding: 1rem; border-radius: var(--border-radius); min-height: 120px; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; }
+        .comparison-box.original { background-color: #fff3cd; border: 1px solid #ffeaa7; }
+        .comparison-box.adapted { background-color: #d1ecf1; border: 1px solid #b8daff; }
+        .dimension-card { background: white; border: 1px solid #dee2e6; border-radius: var(--border-radius); padding: 1rem; margin-bottom: 0.5rem; }
+        .culture-bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; margin: 0.5rem 0; background-color: #e9ecef; }
+        .culture-source, .culture-target { display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: 500; }
+        .culture-source { background: linear-gradient(90deg, #ff6b6b, #ee5a24); }
+        .culture-target { background: linear-gradient(90deg, #4834d4, #686de0); }
+        .difference-major { background-color: #f5c6cb; color: #721c24; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .difference-significant { background-color: #f8d7da; color: #721c24; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .difference-moderate { background-color: #fff3cd; color: #856404; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .difference-minimal { background-color: #d4edda; color: #155724; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        #keyChanges li::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--success-color); margin-right: 0.75rem; }
+        #culturalInsights li::before { content: "\f0eb"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--primary-color); margin-right: 0.75rem; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .example-selector { margin-bottom: 2rem; }
+        .example-btn { margin: 0.25rem; }
+        .example-btn.active { background-color: var(--primary-color); color: white; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-globe-americas me-2"></i>
+                Culture Map Assistant - Interactive Demo
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Interactive Demo</strong> - Try different cultural adaptation examples below. 
+            <a href="#" onclick="window.open('http://localhost:5000', '_blank')">View Full App</a> (if running locally)
+        </div>
+
+        <!-- Example Selector -->
+        <div class="example-selector">
+            <h5>Choose a Cultural Adaptation Example:</h5>
+            <button class="btn btn-outline-primary example-btn active" onclick="loadExample('german-japanese')">
+                🇩🇪 → 🇯🇵 German to Japanese
+            </button>
+            <button class="btn btn-outline-primary example-btn" onclick="loadExample('japanese-german')">
+                🇯🇵 → 🇩🇪 Japanese to German
+            </button>
+            <button class="btn btn-outline-primary example-btn" onclick="loadExample('usa-netherlands')">
+                🇺🇸 → 🇳🇱 USA to Netherlands
+            </button>
+            <button class="btn btn-outline-primary example-btn" onclick="loadExample('china-usa')">
+                🇨🇳 → 🇺🇸 China to USA
+            </button>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h4 class="mb-0">
+                            <i class="fas fa-comments me-2"></i>
+                            Cross-Cultural Communication Demo
+                        </h4>
+                        <p class="text-muted mb-0 mt-1" id="exampleDescription">Example: German → Japanese Business Communication</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Demo Results -->
+                        <div class="card mb-4 border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    Culturally Adapted Message
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="adapted-message" id="adaptedMessage">I hope this message finds you well. I would appreciate the opportunity to discuss some aspects of our team's recent performance when it might be convenient for you.</div>
+                                <div class="mt-3">
+                                    <button class="btn btn-sm btn-outline-success" onclick="copyText()">
+                                        <i class="fas fa-copy me-1"></i>
+                                        Copy to Clipboard
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comparison -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-exchange-alt me-2"></i>
+                                    Before & After Comparison
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted" id="originalLabel">Original (German Style)</h6>
+                                        <div class="comparison-box original" id="originalText">We need to discuss the problems with your team's performance immediately.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted" id="adaptedLabel">Adapted (Japanese Style)</h6>
+                                        <div class="comparison-box adapted" id="adaptedTextComparison">I hope this message finds you well. I would appreciate the opportunity to discuss some aspects of our team's recent performance when it might be convenient for you.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cultural Analysis -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-chart-line me-2"></i>
+                                    Cultural Analysis
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert" id="overallAssessment">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>High Adaptation Needed:</strong> Major differences in communication, evaluation, leading, and disagreeing styles
+                                </div>
+                                
+                                <div id="dimensionAnalysis">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Insights -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-list me-2"></i>
+                                            Key Changes Made
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul id="keyChanges" class="list-unstyled">
+                                            <!-- Will be populated by JavaScript -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-lightbulb me-2"></i>
+                                            Cultural Insights
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul id="culturalInsights" class="list-unstyled">
+                                            <!-- Will be populated by JavaScript -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Cultural adaptation examples
+        const examples = {
+            'german-japanese': {
+                description: 'German → Japanese Business Communication',
+                originalText: 'We need to discuss the problems with your team\'s performance immediately.',
+                adaptedText: 'I hope this message finds you well. I would appreciate the opportunity to discuss some aspects of our team\'s recent performance when it might be convenient for you.\n\nPerhaps we could schedule a private meeting to explore how we might enhance our collaborative effectiveness in a way that supports everyone\'s success.',
+                originalLabel: 'Original (German Style)',
+                adaptedLabel: 'Adapted (Japanese Style)',
+                assessment: {
+                    level: 'alert-danger',
+                    message: 'High Adaptation Needed: Major differences in communication, evaluation, leading, and disagreeing styles'
+                },
+                keyChanges: [
+                    'Added respectful greeting and relationship-building opener',
+                    'Softened "problems" to "aspects" for face-saving',
+                    'Changed immediate demand to polite request',
+                    'Added flexibility with "when convenient"',
+                    'Suggested private meeting to avoid public embarrassment'
+                ],
+                culturalInsights: [
+                    'Japanese culture values harmony and face-saving',
+                    'Indirect communication allows for interpretation',
+                    'Hierarchy and respect for authority are crucial',
+                    'Relationship-building precedes business discussions',
+                    'Private feedback prevents public embarrassment'
+                ]
+            },
+            'japanese-german': {
+                description: 'Japanese → German Business Communication',
+                originalText: 'I hope this message finds you in good health. I have been thinking about our recent project discussions, and I believe there might be some areas where we could perhaps consider making some small adjustments. I would be most grateful if we could find a convenient time to explore these possibilities together, when it would not be too much trouble for your busy schedule.',
+                adaptedText: 'I need to discuss necessary changes to our project. Based on my analysis, we have three specific issues that require immediate attention: timeline delays, budget overruns, and resource allocation problems.\n\nLet\'s schedule a meeting this week to address these points and implement solutions.',
+                originalLabel: 'Original (Japanese Style)',
+                adaptedLabel: 'Adapted (German Style)',
+                assessment: {
+                    level: 'alert-danger',
+                    message: 'High Adaptation Needed: Major differences in communication directness and time orientation'
+                },
+                keyChanges: [
+                    'Removed excessive politeness and relationship building',
+                    'Made the problem statement direct and explicit',
+                    'Listed specific issues clearly',
+                    'Removed softening language like "perhaps" and "small"',
+                    'Added clear action item with specific timeline'
+                ],
+                culturalInsights: [
+                    'German culture values direct, efficient communication',
+                    'Explicit problem identification is appreciated',
+                    'Time efficiency and punctuality are crucial',
+                    'Task-focused approach over relationship building',
+                    'Clear action items and timelines expected'
+                ]
+            },
+            'usa-netherlands': {
+                description: 'USA → Netherlands Business Communication',
+                originalText: 'Great job on the presentation! I think we can make some improvements to make it even better. Maybe we could enhance the data visualization and add some more compelling examples.',
+                adaptedText: 'Your presentation has strong content, but there are significant issues with the data visualization that need to be addressed. The examples are insufficient and the charts are misleading.\n\nHere\'s what needs to be fixed: redesign all charts for clarity, add three concrete case studies, and remove the unsupported claims in section 2.',
+                originalLabel: 'Original (USA Style)',
+                adaptedLabel: 'Adapted (Netherlands Style)',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Differences in directness and feedback delivery'
+                },
+                keyChanges: [
+                    'Removed sugar-coating and false positivity',
+                    'Made criticisms explicit and direct',
+                    'Provided specific, actionable feedback',
+                    'Eliminated softening language like "maybe" and "some"',
+                    'Listed concrete steps for improvement'
+                ],
+                culturalInsights: [
+                    'Dutch culture values brutal honesty and directness',
+                    'Constructive criticism is seen as helpful, not rude',
+                    'Specific feedback is more valuable than general praise',
+                    'Efficiency in communication is highly valued',
+                    'Direct feedback builds trust and respect'
+                ]
+            },
+            'china-usa': {
+                description: 'China → USA Business Communication',
+                originalText: 'Honored colleagues, I hope this message finds you and your esteemed families in excellent health and prosperity. After careful consideration and extensive consultation with our respected leadership team, we have reached the conclusion that certain adjustments to our collaborative approach might be beneficial for all parties involved.',
+                adaptedText: 'Hi team,\n\nWe\'ve identified opportunities to improve our partnership. Here are three specific changes we\'d like to implement:\n\n1. Weekly check-in calls instead of monthly\n2. Shared project dashboard for real-time updates  \n3. Direct communication channels between technical teams\n\nLet\'s discuss these in Friday\'s meeting. I\'ll send a calendar invite.',
+                originalLabel: 'Original (Chinese Style)',
+                adaptedLabel: 'Adapted (USA Style)',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Differences in formality and communication style'
+                },
+                keyChanges: [
+                    'Reduced formality and hierarchical language',
+                    'Made points explicit and action-oriented',
+                    'Added specific, concrete proposals',
+                    'Used casual, direct greeting',
+                    'Included clear next steps and timeline'
+                ],
+                culturalInsights: [
+                    'American culture prefers casual, direct communication',
+                    'Action-oriented language shows efficiency',
+                    'Specific proposals demonstrate problem-solving focus',
+                    'Time-sensitive communication is valued',
+                    'Collaborative tone builds team engagement'
+                ]
+            }
+        };
+
+        let currentExample = 'german-japanese';
+
+        function loadExample(exampleKey) {
+            currentExample = exampleKey;
+            const example = examples[exampleKey];
+            
+            // Update active button
+            document.querySelectorAll('.example-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content
+            document.getElementById('exampleDescription').textContent = `Example: ${example.description}`;
+            document.getElementById('adaptedMessage').textContent = example.adaptedText;
+            document.getElementById('originalText').textContent = example.originalText;
+            document.getElementById('adaptedTextComparison').textContent = example.adaptedText;
+            document.getElementById('originalLabel').textContent = example.originalLabel;
+            document.getElementById('adaptedLabel').textContent = example.adaptedLabel;
+            
+            // Update assessment
+            const assessment = document.getElementById('overallAssessment');
+            assessment.className = `alert ${example.assessment.level}`;
+            assessment.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i><strong>${example.assessment.message}</strong>`;
+            
+            // Update key changes
+            const keyChanges = document.getElementById('keyChanges');
+            keyChanges.innerHTML = '';
+            example.keyChanges.forEach(change => {
+                const li = document.createElement('li');
+                li.textContent = change;
+                keyChanges.appendChild(li);
+            });
+            
+            // Update cultural insights
+            const insights = document.getElementById('culturalInsights');
+            insights.innerHTML = '';
+            example.culturalInsights.forEach(insight => {
+                const li = document.createElement('li');
+                li.textContent = insight;
+                insights.appendChild(li);
+            });
+            
+            // Add dimension analysis placeholder
+            document.getElementById('dimensionAnalysis').innerHTML = `
+                <div class="dimension-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold">Communication</span>
+                        <span class="difference-major">major difference</span>
+                    </div>
+                    <div class="small text-muted mb-2">
+                        <div>Cultural communication styles differ significantly</div>
+                    </div>
+                    <div class="culture-bar">
+                        <div class="culture-source" style="width: 75%">Source</div>
+                        <div class="culture-target" style="width: 25%">Target</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function copyText() {
+            const text = document.getElementById('adaptedMessage').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+                btn.classList.add('btn-success');
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-success');
+                }, 2000);
+            });
+        }
+
+        // Initialize with first example
+        window.addEventListener('load', () => {
+            loadExample('german-japanese');
+        });
+    </script>
+</body>
+</html>
