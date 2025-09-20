@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culture Map Communication Assistant - Internal Company Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --success-color: #198754;
+            --border-radius: 0.5rem;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f6fa; }
+        .card { border: none; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); border-radius: var(--border-radius); }
+        .adapted-message { background-color: #f8f9fa; border-left: 4px solid var(--success-color); padding: 1.5rem; border-radius: var(--border-radius); font-size: 1.05rem; line-height: 1.7; white-space: pre-wrap; }
+        .comparison-box { padding: 1rem; border-radius: var(--border-radius); min-height: 120px; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; }
+        .comparison-box.original { background-color: #fff3cd; border: 1px solid #ffeaa7; }
+        .comparison-box.adapted { background-color: #d1ecf1; border: 1px solid #b8daff; }
+        .dimension-card { background: white; border: 1px solid #dee2e6; border-radius: var(--border-radius); padding: 1rem; margin-bottom: 0.5rem; }
+        .culture-bar { display: flex; height: 20px; border-radius: 10px; overflow: hidden; margin: 0.5rem 0; background-color: #e9ecef; }
+        .culture-source, .culture-target { display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: 500; }
+        .culture-source { background: linear-gradient(90deg, #ff6b6b, #ee5a24); }
+        .culture-target { background: linear-gradient(90deg, #4834d4, #686de0); }
+        .difference-major { background-color: #f5c6cb; color: #721c24; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .difference-significant { background-color: #f8d7da; color: #721c24; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .difference-moderate { background-color: #fff3cd; color: #856404; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        .difference-minimal { background-color: #d4edda; color: #155724; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; }
+        #keyChanges li::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--success-color); margin-right: 0.75rem; }
+        #culturalInsights li::before { content: "\f0eb"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--primary-color); margin-right: 0.75rem; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .example-selector { margin-bottom: 2rem; }
+        .example-btn { margin: 0.25rem; font-size: 0.9rem; }
+        .example-btn.active { background-color: var(--primary-color); color: white; }
+        .office-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0; }
+        .office-card { background: white; padding: 1rem; border-radius: 8px; border: 1px solid #dee2e6; text-align: center; }
+        .company-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-building me-2"></i>
+                Internal Culture Map Assistant
+            </a>
+            <span class="navbar-text">
+                <i class="fas fa-users me-1"></i> Multicultural Team Communication Tool
+            </span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Company Header -->
+        <div class="company-header text-center">
+            <h2><i class="fas fa-globe-americas me-2"></i>Multicultural Team Communication</h2>
+            <p class="mb-3">Bridge cultural gaps across our global offices with AI-powered communication adaptation</p>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Internal Team Tool</strong> - Select your office location and your colleague's office to see how to adapt your communication style for better collaboration.
+        </div>
+
+        <!-- Example Selector -->
+        <div class="example-selector">
+            <h5>Choose Your Cross-Office Communication Scenario:</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-outline-primary example-btn active" onclick="loadExample('usa-colombia')">
+                        🇺🇸 USA → 🇨🇴 Colombia Team
+                    </button>
+                    <button class="btn btn-outline-primary example-btn" onclick="loadExample('ukraine-uk')">
+                        🇺🇦 Ukraine → 🇬🇧 UK Team
+                    </button>
+                    <button class="btn btn-outline-primary example-btn" onclick="loadExample('canada-poland')">
+                        🇨🇦 Canada → 🇵🇱 Poland Team
+                    </button>
+                    <button class="btn btn-outline-primary example-btn" onclick="loadExample('armenia-usa')">
+                        🇦🇲 Armenia → 🇺🇸 USA Team
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-outline-primary example-btn" onclick="loadExample('costa-rica-ukraine')">
+                        🇨🇷 Costa Rica → 🇺🇦 Ukraine Team
+                    </button>
+                    <button class="btn btn-outline-primary example-btn" onclick="loadExample('poland-colombia')">
+                        🇵🇱 Poland → 🇨🇴 Colombia Team
+                    </button>
+                    <button class="btn btn-outline-primary example-btn" onclick="loadExample('uk-armenia')">
+                        🇬🇧 UK → 🇦🇲 Armenia Team
+                    </button>
+                    <button class="btn btn-outline-primary example-btn" onclick="loadExample('colombia-canada')">
+                        🇨🇴 Colombia → 🇨🇦 Canada Team
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow">
+                    <div class="card-header bg-light">
+                        <h4 class="mb-0">
+                            <i class="fas fa-comments me-2"></i>
+                            Cross-Office Communication Example
+                        </h4>
+                        <p class="text-muted mb-0 mt-1" id="exampleDescription">Example: USA Office → Colombia Office Team Communication</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Demo Results -->
+                        <div class="card mb-4 border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    Culturally Adapted Message for Your Colleague
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="adapted-message" id="adaptedMessage">Hi team! I hope everyone is doing well. I wanted to reach out about our upcoming project deadline and see how we can work together to ensure everything goes smoothly.</div>
+                                <div class="mt-3">
+                                    <button class="btn btn-sm btn-outline-success" onclick="copyText()">
+                                        <i class="fas fa-copy me-1"></i>
+                                        Copy Adapted Message
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comparison -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-exchange-alt me-2"></i>
+                                    Before & After Comparison
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted" id="originalLabel">Your Original Message (USA Style)</h6>
+                                        <div class="comparison-box original" id="originalText">We need to hit the Q4 deadline. Please prioritize the deliverables and let me know if there are any blockers.</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-muted" id="adaptedLabel">Adapted for Colombia Team</h6>
+                                        <div class="comparison-box adapted" id="adaptedTextComparison">Hi team! I hope everyone is doing well. I wanted to reach out about our upcoming project deadline and see how we can work together to ensure everything goes smoothly.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cultural Analysis -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-chart-line me-2"></i>
+                                    Cross-Office Cultural Analysis
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert" id="overallAssessment">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Moderate Adaptation Needed:</strong> Different approaches to relationship-building and time orientation
+                                </div>
+                                
+                                <div id="dimensionAnalysis">
+                                    <div class="dimension-card">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="fw-bold">Communication Style</span>
+                                            <span class="difference-moderate">moderate difference</span>
+                                        </div>
+                                        <div class="small text-muted mb-2">
+                                            <div>USA: Direct, task-focused communication</div>
+                                            <div>Colombia: Relationship-first, warm communication</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Insights -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-list me-2"></i>
+                                            Key Changes for Better Collaboration
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul id="keyChanges" class="list-unstyled">
+                                            <!-- Will be populated by JavaScript -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-lightbulb me-2"></i>
+                                            Cultural Tips for Your Colleague's Office
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul id="culturalInsights" class="list-unstyled">
+                                            <!-- Will be populated by JavaScript -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team Collaboration Tips -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">
+                                    <i class="fas fa-handshake me-2"></i>
+                                    Team Collaboration Best Practices
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row" id="collaborationTips">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Company office communication examples
+        const examples = {
+            'usa-colombia': {
+                description: 'USA Office → Colombia Office Team Communication',
+                originalText: 'We need to hit the Q4 deadline. Please prioritize the deliverables and let me know if there are any blockers.',
+                adaptedText: 'Hi team! I hope everyone is doing well and enjoying their week. I wanted to reach out about our upcoming Q4 project milestone.\n\nI\'d love to hear your thoughts on how we can work together to ensure everything goes smoothly. Please let me know if you need any support or if there\'s anything I can help with to make this successful for all of us.',
+                originalLabel: 'Your Original Message (USA Style)',
+                adaptedLabel: 'Adapted for Colombia Team',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Different approaches to relationship-building and directness'
+                },
+                keyChanges: [
+                    'Added warm personal greeting and relationship check-in',
+                    'Softened deadline pressure into collaborative milestone',
+                    'Changed direct demands to inclusive collaboration requests',
+                    'Added offer of support and assistance',
+                    'Used "we" language instead of "you" commands'
+                ],
+                culturalInsights: [
+                    'Colombian colleagues value relationship-building before business',
+                    'Warm, personal greetings strengthen team connections',
+                    'Collaborative language works better than direct commands',
+                    'Showing care for team wellbeing builds trust',
+                    'Offering support creates positive team dynamics'
+                ],
+                collaborationTips: [
+                    'Start meetings with personal check-ins',
+                    'Allow extra time for relationship building',
+                    'Use collaborative rather than directive language',
+                    'Show appreciation for team contributions regularly'
+                ]
+            },
+            'ukraine-uk': {
+                description: 'Ukraine Office → UK Office Team Communication',
+                originalText: 'The system is broken and needs immediate fix. I have identified the root cause and will implement the solution now.',
+                adaptedText: 'I hope you\'re having a good day. I\'ve noticed some challenges with our system that I believe we should address.\n\nI\'ve done some preliminary analysis and think I may have identified a potential solution. Would it be helpful if I shared my findings with the team before proceeding? I\'d appreciate your thoughts on the best approach.',
+                originalLabel: 'Your Original Message (Ukraine Style)',
+                adaptedLabel: 'Adapted for UK Team',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Different communication directness and decision-making styles'
+                },
+                keyChanges: [
+                    'Softened problem description from "broken" to "challenges"',
+                    'Added diplomatic opening and relationship consideration',
+                    'Changed unilateral action to collaborative consultation',
+                    'Used tentative language ("think I may have") for humility',
+                    'Asked for input before proceeding with solution'
+                ],
+                culturalInsights: [
+                    'UK colleagues appreciate diplomatic, understated communication',
+                    'Consulting team before major actions shows respect',
+                    'Tentative language allows face-saving for all parties',
+                    'Collaborative decision-making is valued over individual action',
+                    'Polite inquiries work better than direct statements'
+                ],
+                collaborationTips: [
+                    'Use consultative language before implementing changes',
+                    'Allow team input on technical decisions',
+                    'Frame problems diplomatically to avoid blame',
+                    'Show consideration for others\' expertise and opinions'
+                ]
+            },
+            'canada-poland': {
+                description: 'Canada Office → Poland Office Team Communication',
+                originalText: 'Hey everyone! Just wanted to touch base about the project. What do you all think about pushing the deadline back a bit? Would love to hear everyone\'s thoughts!',
+                adaptedText: 'Dear Team,\n\nI hope this message finds you well. I am writing to discuss our current project timeline and would like to formally request your professional input on a potential schedule adjustment.\n\nGiven the scope of work, I believe it would be prudent to consider extending our deadline. I would greatly appreciate your expert assessment of this proposal and welcome your guidance on the most appropriate path forward.',
+                originalLabel: 'Your Original Message (Canada Style)',
+                adaptedLabel: 'Adapted for Poland Team',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Different formality levels and decision-making hierarchy'
+                },
+                keyChanges: [
+                    'Increased formality from casual "Hey" to professional "Dear Team"',
+                    'Added structured, respectful opening',
+                    'Changed casual suggestion to formal request for input',
+                    'Used professional language and expertise acknowledgment',
+                    'Showed respect for team\'s professional judgment'
+                ],
+                culturalInsights: [
+                    'Polish colleagues appreciate formal, respectful communication',
+                    'Professional expertise and experience are highly valued',
+                    'Structured communication shows respect for hierarchy',
+                    'Formal requests work better than casual suggestions',
+                    'Acknowledging others\' expertise builds respect'
+                ],
+                collaborationTips: [
+                    'Use formal greetings and professional language',
+                    'Structure requests clearly and respectfully',
+                    'Acknowledge team expertise and experience',
+                    'Allow proper time for considered responses'
+                ]
+            },
+            'armenia-usa': {
+                description: 'Armenia Office → USA Office Team Communication',
+                originalText: 'Respected colleagues, I hope this message finds you and your families in good health. After careful consideration and discussion with our esteemed leadership, I would like to humbly present some thoughts regarding our project approach, if I may be so bold.',
+                adaptedText: 'Hi team,\n\nI\'ve been analyzing our project approach and have some ideas to share. Based on my research, I think we can optimize our workflow in three key areas.\n\nI\'d like to set up a 30-minute meeting this week to walk through my recommendations. Let me know what works for your schedules.',
+                originalLabel: 'Your Original Message (Armenia Style)',
+                adaptedLabel: 'Adapted for USA Team',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Different formality and directness expectations'
+                },
+                keyChanges: [
+                    'Reduced excessive formality to casual professional tone',
+                    'Removed hierarchical references and family mentions',
+                    'Changed humble approach to confident expertise sharing',
+                    'Added specific, actionable next steps',
+                    'Made communication direct and time-efficient'
+                ],
+                culturalInsights: [
+                    'US colleagues prefer direct, efficient communication',
+                    'Confidence in presenting ideas is valued over excessive humility',
+                    'Action-oriented language shows productivity focus',
+                    'Time-efficient communication is appreciated',
+                    'Casual professional tone builds team rapport'
+                ],
+                collaborationTips: [
+                    'Be confident when presenting ideas and expertise',
+                    'Use direct language and clear action items',
+                    'Focus on business value over relationship formalities',
+                    'Keep communications time-efficient and actionable'
+                ]
+            },
+            'costa-rica-ukraine': {
+                description: 'Costa Rica Office → Ukraine Office Team Communication',
+                originalText: 'Hello dear friends! I hope you\'re all having a wonderful day with your families. I wanted to share some thoughts about our project, but please don\'t feel any pressure to respond quickly. Take all the time you need to consider this.',
+                adaptedText: 'Hello team,\n\nI have completed analysis of our project requirements and identified several optimization opportunities. Please find my recommendations below:\n\n1. Database performance improvements\n2. API response time optimization\n3. User interface efficiency updates\n\nI can implement these changes this week. Please confirm if you agree with this approach.',
+                originalLabel: 'Your Original Message (Costa Rica Style)',
+                adaptedLabel: 'Adapted for Ukraine Team',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Different communication efficiency and task focus'
+                },
+                keyChanges: [
+                    'Removed excessive relationship building and family references',
+                    'Changed vague sharing to specific technical recommendations',
+                    'Added structured, numbered list of actionable items',
+                    'Included clear timeline and implementation plan',
+                    'Requested direct confirmation rather than open-ended discussion'
+                ],
+                culturalInsights: [
+                    'Ukrainian colleagues prefer task-focused, efficient communication',
+                    'Technical details and specific plans are valued',
+                    'Direct requests for confirmation save time',
+                    'Structured information presentation is appreciated',
+                    'Action-oriented approach shows professionalism'
+                ],
+                collaborationTips: [
+                    'Focus on technical details and specific outcomes',
+                    'Use structured communication with clear action items',
+                    'Be direct about timelines and implementation plans',
+                    'Minimize relationship-building in favor of task efficiency'
+                ]
+            },
+            'poland-colombia': {
+                description: 'Poland Office → Colombia Office Team Communication',
+                originalText: 'According to company procedures, the quarterly report must be submitted by the established deadline. Please ensure all documentation is properly formatted and reviewed by appropriate supervisors before submission.',
+                adaptedText: 'Hi everyone! I hope you\'re all doing great this week.\n\nI wanted to reach out about our upcoming quarterly report - I know we\'re all working hard on this together! I thought it might be helpful to chat about the timeline and see how we can support each other to make sure everything goes smoothly.\n\nWould you like to have a quick team call to discuss how we can collaborate on this? I\'m happy to help with any formatting or review needs you might have.',
+                originalLabel: 'Your Original Message (Poland Style)',
+                adaptedLabel: 'Adapted for Colombia Team',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Different approaches to authority and team collaboration'
+                },
+                keyChanges: [
+                    'Changed formal procedure reference to friendly team approach',
+                    'Added warm personal greeting and team acknowledgment',
+                    'Transformed directive into collaborative suggestion',
+                    'Offered personal support and assistance',
+                    'Proposed team discussion rather than individual compliance'
+                ],
+                culturalInsights: [
+                    'Colombian colleagues respond well to collaborative approaches',
+                    'Team support and mutual assistance are highly valued',
+                    'Friendly, warm communication builds better relationships',
+                    'Suggesting rather than directing creates better buy-in',
+                    'Offering help shows team solidarity and care'
+                ],
+                collaborationTips: [
+                    'Frame requirements as team collaboration opportunities',
+                    'Offer support and assistance proactively',
+                    'Use warm, friendly tone even for formal requirements',
+                    'Focus on "we" rather than "you" language'
+                ]
+            },
+            'uk-armenia': {
+                description: 'UK Office → Armenia Office Team Communication',
+                originalText: 'I suspect there might be a small issue with the current implementation that could perhaps benefit from a bit of attention when convenient.',
+                adaptedText: 'Dear Esteemed Colleagues,\n\nI hope this message finds you and your families in excellent health and spirits. I am writing to you with great respect for your expertise and experience.\n\nAfter careful review, I have identified a technical matter that would greatly benefit from your professional guidance and wisdom. I would be deeply honored if you could share your valuable insights on this matter when your important work schedule permits.\n\nWith sincere appreciation for your time and expertise.',
+                originalLabel: 'Your Original Message (UK Style)',
+                adaptedLabel: 'Adapted for Armenia Team',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Different formality and respect expression levels'
+                },
+                keyChanges: [
+                    'Increased formality and respectful language significantly',
+                    'Added family well-wishes and personal consideration',
+                    'Changed understated problem to request for expert guidance',
+                    'Included expressions of honor and appreciation',
+                    'Added formal closing with respect acknowledgment'
+                ],
+                culturalInsights: [
+                    'Armenian colleagues appreciate formal, respectful communication',
+                    'Family consideration and personal well-being matter',
+                    'Acknowledging expertise and experience builds trust',
+                    'Formal expressions of respect are valued',
+                    'Humble requests for guidance work better than casual mentions'
+                ],
+                collaborationTips: [
+                    'Use formal, respectful language in all communications',
+                    'Acknowledge others\' expertise and experience explicitly',
+                    'Include family consideration in greetings when appropriate',
+                    'Show appreciation for time and guidance provided'
+                ]
+            },
+            'colombia-canada': {
+                description: 'Colombia Office → Canada Office Team Communication',
+                originalText: 'My dear friends and colleagues! I hope you and your beautiful families are blessed with health and happiness. I am so grateful to work with such wonderful people. I wanted to share my heart about our project - I feel we should take time to really connect as a team before we move forward.',
+                adaptedText: 'Hi team,\n\nI hope everyone is doing well. I\'d like to suggest we schedule a team alignment session before proceeding with our next project phase.\n\nI think it would be valuable to ensure we\'re all on the same page regarding objectives and approach. This could help us work more effectively together and address any questions upfront.\n\nWould a 1-hour session work for everyone next week? I\'m happy to coordinate the logistics.',
+                originalLabel: 'Your Original Message (Colombia Style)',
+                adaptedLabel: 'Adapted for Canada Team',
+                assessment: {
+                    level: 'alert-warning',
+                    message: 'Moderate Adaptation Needed: Different emotional expression and business efficiency balance'
+                },
+                keyChanges: [
+                    'Reduced emotional language to professional warmth',
+                    'Removed family references and excessive personal connection',
+                    'Changed emotional sharing to practical business suggestion',
+                    'Added specific logistics and time management',
+                    'Focused on efficiency while maintaining team consideration'
+                ],
+                culturalInsights: [
+                    'Canadian colleagues appreciate professional yet warm communication',
+                    'Balance relationship-building with business efficiency',
+                    'Practical suggestions work better than emotional appeals',
+                    'Specific logistics and time considerations are important',
+                    'Collaborative planning shows respect for everyone\'s time'
+                ],
+                collaborationTips: [
+                    'Balance warmth with professional efficiency',
+                    'Suggest specific, time-bounded team activities',
+                    'Focus on practical benefits of team alignment',
+                    'Offer to handle logistics and coordination'
+                ]
+            }
+        };
+
+        let currentExample = 'usa-colombia';
+
+        function loadExample(exampleKey) {
+            currentExample = exampleKey;
+            const example = examples[exampleKey];
+            
+            // Update active button
+            document.querySelectorAll('.example-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content
+            document.getElementById('exampleDescription').textContent = `Example: ${example.description}`;
+            document.getElementById('adaptedMessage').textContent = example.adaptedText;
+            document.getElementById('originalText').textContent = example.originalText;
+            document.getElementById('adaptedTextComparison').textContent = example.adaptedText;
+            document.getElementById('originalLabel').textContent = example.originalLabel;
+            document.getElementById('adaptedLabel').textContent = example.adaptedLabel;
+            
+            // Update assessment
+            const assessment = document.getElementById('overallAssessment');
+            assessment.className = `alert ${example.assessment.level}`;
+            assessment.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i><strong>${example.assessment.message}</strong>`;
+            
+            // Update key changes
+            const keyChanges = document.getElementById('keyChanges');
+            keyChanges.innerHTML = '';
+            example.keyChanges.forEach(change => {
+                const li = document.createElement('li');
+                li.textContent = change;
+                keyChanges.appendChild(li);
+            });
+            
+            // Update cultural insights
+            const insights = document.getElementById('culturalInsights');
+            insights.innerHTML = '';
+            example.culturalInsights.forEach(insight => {
+                const li = document.createElement('li');
+                li.textContent = insight;
+                insights.appendChild(li);
+            });
+            
+            // Update collaboration tips
+            const tips = document.getElementById('collaborationTips');
+            tips.innerHTML = '';
+            example.collaborationTips.forEach(tip => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-2';
+                col.innerHTML = `<small><i class="fas fa-handshake me-2 text-primary"></i>${tip}</small>`;
+                tips.appendChild(col);
+            });
+        }
+
+        function copyText() {
+            const text = document.getElementById('adaptedMessage').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+                btn.classList.add('btn-success');
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-success');
+                }, 2000);
+            });
+        }
+
+        // Initialize with first example
+        window.addEventListener('load', () => {
+            loadExample('usa-colombia');
+        });
+    </script>
+</body>
+</html>
